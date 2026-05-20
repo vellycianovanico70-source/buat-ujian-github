@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Exam Survival Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #18181f;
+    --border: #2a2a35;
+    --accent: #f0c040;
+    --accent2: #e05a5a;
+    --accent3: #5ae0a0;
+    --accent4: #5ab4e0;
+    --text: #f0eee8;
+    --muted: #7a7a8a;
+    --easy: #5ae0a0;
+    --medium: #f0c040;
+    --hard: #e05a5a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* HEADER */
+  header {
+    padding: 2rem 2rem 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(240,192,64,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', cursive;
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(240,192,64,0.3);
+  }
+
+  .logo span { color: var(--text); }
+
+  .tagline {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding-bottom: 0.3rem;
+  }
+
+  .header-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* COUNTDOWN */
+  .countdown-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .countdown-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .countdown-days {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .countdown-days.urgent { color: var(--accent2); animation: pulse 1s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* EXAM DATE SETTER */
+  .date-input-wrap {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .date-input-wrap input[type="date"] {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .date-input-wrap input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.5;
+    cursor: pointer;
+  }
+
+  /* MAIN LAYOUT */
+  main {
+    padding: 1.5rem 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--stat-color, var(--accent));
+    opacity: 0.7;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 2.2rem;
+    color: var(--stat-color, var(--accent));
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 0.2rem;
+  }
+
+  /* TOOLBAR */
+  .toolbar {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.65rem 1rem 0.65rem 2.5rem;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-wrap input::placeholder { color: var(--muted); }
+
+  .search-icon {
+    position: absolute;
+    left: 0.9rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.65rem 1.1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(240,192,64,0.07);
+  }
+
+  .btn-add {
+    background: var(--accent);
+    color: #0a0a0f;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-add:hover {
+    background: #ffd060;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(240,192,64,0.3);
+  }
+
+  /* SUBJECT GRID */
+  .subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.2rem;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* SUBJECT CARD */
+  .subject-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.4rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s;
+    cursor: default;
+    animation: cardIn 0.3s ease;
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .subject-card:hover {
+    border-color: var(--card-accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .subject-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--card-accent);
+  }
+
+  .subject-card.done {
+    opacity: 0.5;
+    filter: saturate(0.3);
+  }
+
+  .subject-card.done .subject-name {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+
+  /* DIFFICULTY BADGE */
+  .diff-badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    margin-bottom: 0.8rem;
+  }
+
+  .diff-mudah { background: rgba(90,224,160,0.15); color: var(--easy); border: 1px solid rgba(90,224,160,0.3); }
+  .diff-sedang { background: rgba(240,192,64,0.15); color: var(--medium); border: 1px solid rgba(240,192,64,0.3); }
+  .diff-susah { background: rgba(224,90,90,0.15); color: var(--hard); border: 1px solid rgba(224,90,90,0.3); }
+
+  .subject-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+  }
+
+  .subject-meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 1rem;
+  }
+
+  .subject-notes {
+    font-size: 0.82rem;
+    color: #9a9aaa;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    min-height: 1.5em;
+  }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    margin-bottom: 1rem;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .progress-bar {
+    background: var(--border);
+    border-radius: 100px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: var(--card-accent);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* PROGRESS CONTROL */
+  .progress-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prog-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .prog-btn:hover {
+    border-color: var(--card-accent);
+    color: var(--card-accent);
+  }
+
+  .prog-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+    flex: 1;
+    text-align: center;
+  }
+
+  /* CARD ACTIONS */
+  .card-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  }
+
+  .action-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .action-btn:hover { color: var(--text); border-color: var(--text); }
+  .action-btn.delete:hover { color: var(--accent2); border-color: var(--accent2); }
+  .action-btn.done-btn:hover { color: var(--easy); border-color: var(--easy); }
+
+  /* EXAM DATE ON CARD */
+  .card-exam-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .days-left-pill {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 100px;
+    font-size: 0.65rem;
+    font-weight: 600;
+  }
+
+  .days-left-pill.urgent { background: rgba(224,90,90,0.2); color: var(--hard); }
+  .days-left-pill.soon { background: rgba(240,192,64,0.2); color: var(--medium); }
+  .days-left-pill.ok { background: rgba(90,224,160,0.15); color: var(--easy); }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    transform: scale(0.95) translateY(10px);
+    transition: transform 0.2s;
+    position: relative;
+  }
+
+  .modal-overlay.open .modal {
+    transform: scale(1) translateY(0);
+  }
+
+  .modal-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-close:hover { color: var(--text); border-color: var(--text); }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+
+  .form-select option { background: var(--card); }
+
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  /* DIFFICULTY SELECTOR */
+  .diff-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .diff-opt {
+    padding: 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+
+  .diff-opt[data-val="mudah"].selected { border-color: var(--easy); color: var(--easy); background: rgba(90,224,160,0.1); }
+  .diff-opt[data-val="sedang"].selected { border-color: var(--medium); color: var(--medium); background: rgba(240,192,64,0.1); }
+  .diff-opt[data-val="susah"].selected { border-color: var(--hard); color: var(--hard); background: rgba(224,90,90,0.1); }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    justify-content: flex-end;
+  }
+
+  .btn-cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.7rem 1.2rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.15s;
+  }
+
+  .btn-cancel:hover { color: var(--text); border-color: var(--text); }
+
+  .btn-save {
+    background: var(--accent);
+    border: none;
+    color: #0a0a0f;
+    padding: 0.7rem 1.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+
+  .btn-save:hover { background: #ffd060; }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    grid-column: 1 / -1;
+  }
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: grayscale(0.5);
+  }
+
+  .empty-title {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .empty-sub {
+    font-size: 0.85rem;
+    color: var(--muted);
+    opacity: 0.6;
+  }
+
+  /* SORT/FILTER ROW */
+  .sort-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .sort-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .sort-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .sort-btn.active, .sort-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* IMPORT/EXPORT */
+  .io-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-io {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .btn-io:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--card);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    padding: 0.75rem 1.5rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    z-index: 2000;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* SECTION LABEL */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+  }
+
+  .section-divider span {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .section-divider::before, .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* PRIORITY INDICATOR */
+  .priority-ring {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+  }
+
+  .priority-ring svg { width: 36px; height: 36px; }
+  .priority-ring circle { fill: none; stroke-width: 3; }
+  .priority-ring .bg { stroke: var(--border); }
+  .priority-ring .fill { stroke: var(--card-accent); stroke-linecap: round; transition: stroke-dashoffset 0.4s; transform: rotate(-90deg); transform-origin: center; }
+  .priority-ring text { fill: var(--muted); font-family: 'JetBrains Mono', monospace; font-size: 9px; dominant-baseline: middle; text-anchor: middle; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    header { padding: 1rem; }
+    main { padding: 1rem; }
+    .subjects-grid { grid-template-columns: 1fr; }
+    .logo { font-size: 2rem; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div>
+    <div class="logo">Exam<span>Survival</span></div>
+    <div class="tagline">// jadwal belajar • prioritas ujian • pantau progress</div>
+  </div>
+  <div class="header-right">
+    <div class="date-input-wrap">
+      <span style="font-size:0.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace">📅</span>
+      <input type="date" id="examDateGlobal" title="Set tanggal ujian utama">
+    </div>
+    <div class="countdown-box">
+      <div>
+        <div class="countdown-label">Hari lagi</div>
+        <div class="countdown-days" id="countdownDays">—</div>
+      </div>
+      <div style="width:1px;height:2rem;background:var(--border)"></div>
+      <div>
+        <div class="countdown-label">menuju ujian</div>
+        <div style="font-size:0.7rem;color:var(--muted);font-family:'JetBrains Mono',monospace" id="countdownDate">—</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-card" style="--stat-color:var(--accent4)">
+      <div class="stat-num" id="statTotal">0</div>
+      <div class="stat-label">Total Mapel</div>
+    </div>
+    <div class="stat-card" style="--stat-color:var(--hard)">
+      <div class="stat-num" id="statHard">0</div>
+      <div class="stat-label">Susah 🔥</div>
+    </div>
+    <div class="stat-card" style="--stat-color:var(--medium)">
+      <div class="stat-num" id="statMedium">0</div>
+      <div class="stat-label">Sedang ⚡</div>
+    </div>
+    <div class="stat-card" style="--stat-color:var(--easy)">
+      <div class="stat-num" id="statEasy">0</div>
+      <div class="stat-label">Mudah ✓</div>
+    </div>
+    <div class="stat-card" style="--stat-color:var(--accent3)">
+      <div class="stat-num" id="statDone">0</div>
+      <div class="stat-label">Selesai ✅</div>
+    </div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari mata pelajaran...">
+    </div>
+    <button class="filter-btn active" data-filter="all">Semua</button>
+    <button class="filter-btn" data-filter="susah">Susah</button>
+    <button class="filter-btn" data-filter="sedang">Sedang</button>
+    <button class="filter-btn" data-filter="mudah">Mudah</button>
+    <button class="filter-btn" data-filter="belum">Belum Selesai</button>
+    <button class="btn-add" onclick="openModal()">+ Tambah Mapel</button>
+  </div>
+
+  <!-- SORT ROW -->
+  <div class="sort-row">
+    <span class="sort-label">Urut:</span>
+    <button class="sort-btn active" data-sort="diff">Kesulitan</button>
+    <button class="sort-btn" data-sort="date">Tanggal Ujian</button>
+    <button class="sort-btn" data-sort="progress">Progress</button>
+    <button class="sort-btn" data-sort="name">Nama</button>
+    <div style="flex:1"></div>
+    <div class="io-row">
+      <button class="btn-io" onclick="exportData()">📤 Export</button>
+      <button class="btn-io" onclick="document.getElementById('importFile').click()">📥 Import</button>
+      <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="subjects-grid" id="subjectsGrid"></div>
+
+</main>
+
+<!-- MODAL ADD/EDIT -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">Tambah Mapel</div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div class="form-group">
+      <label class="form-label">Nama Mata Pelajaran *</label>
+      <input class="form-input" id="fName" placeholder="e.g. Kalkulus, Fisika, Bahasa Inggris...">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Tingkat Kesulitan</label>
+      <div class="diff-selector">
+        <div class="diff-opt" data-val="mudah" onclick="selectDiff(this)">😊 Mudah</div>
+        <div class="diff-opt selected" data-val="sedang" onclick="selectDiff(this)">😤 Sedang</div>
+        <div class="diff-opt" data-val="susah" onclick="selectDiff(this)">🔥 Susah</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Tanggal Ujian</label>
+      <input class="form-input" type="date" id="fDate">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Topik / Bab yang perlu dipelajari</label>
+      <textarea class="form-textarea" id="fNotes" placeholder="e.g. Bab 3-5, turunan, integral, limit..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Progress Belajar: <span id="fProgressLabel">0%</span></label>
+      <input type="range" id="fProgress" min="0" max="100" step="5" value="0"
+        style="width:100%;accent-color:var(--accent)"
+        oninput="document.getElementById('fProgressLabel').textContent=this.value+'%'">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Batal</button>
+      <button class="btn-save" onclick="saveSubject()">Simpan 💾</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA & STATE ────────────────────────────────────────────
+let subjects = [];
+let editingId = null;
+let currentFilter = 'all';
+let currentSort = 'diff';
+const STORAGE_KEY = 'examsurvival_v2';
+const DATE_KEY = 'examsurvival_date';
+
+const DIFF_ORDER = { susah: 0, sedang: 1, mudah: 2 };
+const DIFF_COLOR = { mudah: 'var(--easy)', sedang: 'var(--medium)', susah: 'var(--hard)' };
+
+function load() {
+  try {
+    subjects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    const savedDate = localStorage.getItem(DATE_KEY);
+    if (savedDate) {
+      document.getElementById('examDateGlobal').value = savedDate;
+      updateCountdown(savedDate);
+    }
+  } catch { subjects = []; }
+}
+
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(subjects));
+}
+
+// ─── COUNTDOWN ────────────────────────────────────────────────
+document.getElementById('examDateGlobal').addEventListener('change', e => {
+  localStorage.setItem(DATE_KEY, e.target.value);
+  updateCountdown(e.target.value);
+});
+
+function updateCountdown(dateStr) {
+  if (!dateStr) return;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const target = new Date(dateStr);
+  const diff = Math.round((target - today) / 86400000);
+  const el = document.getElementById('countdownDays');
+  el.textContent = diff >= 0 ? diff : 'LEWAT';
+  el.className = 'countdown-days' + (diff <= 3 ? ' urgent' : '');
+  document.getElementById('countdownDate').textContent = target.toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+}
+
+// ─── RENDER ───────────────────────────────────────────────────
+function render() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  let list = subjects.filter(s => {
+    const matchSearch = s.name.toLowerCase().includes(search) || (s.notes||'').toLowerCase().includes(search);
+    if (!matchSearch) return false;
+    if (currentFilter === 'all') return true;
+    if (currentFilter === 'belum') return !s.done;
+    return s.difficulty === currentFilter;
+  });
+
+  // Sort
+  list.sort((a, b) => {
+    if (currentSort === 'diff') return (DIFF_ORDER[a.difficulty]||1) - (DIFF_ORDER[b.difficulty]||1);
+    if (currentSort === 'progress') return a.progress - b.progress;
+    if (currentSort === 'name') return a.name.localeCompare(b.name);
+    if (currentSort === 'date') {
+      if (!a.examDate && !b.examDate) return 0;
+      if (!a.examDate) return 1;
+      if (!b.examDate) return -1;
+      return new Date(a.examDate) - new Date(b.examDate);
+    }
+    return 0;
+  });
+
+  const grid = document.getElementById('subjectsGrid');
+  if (list.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">📖</div>
+        <div class="empty-title">${subjects.length === 0 ? 'Belum ada mapel ditambahkan' : 'Tidak ada yang cocok'}</div>
+        <div class="empty-sub">${subjects.length === 0 ? 'Klik "+ Tambah Mapel" untuk mulai' : 'Coba ubah filter atau pencarian'}</div>
+      </div>`;
+    updateStats();
+    return;
+  }
+
+  grid.innerHTML = list.map(s => cardHTML(s)).join('');
+  updateStats();
+}
+
+function cardHTML(s) {
+  const color = DIFF_COLOR[s.difficulty] || 'var(--accent)';
+  const prog = s.progress || 0;
+  const r = 15;
+  const circ = 2 * Math.PI * r;
+  const offset = circ - (prog / 100) * circ;
+
+  let daysLeftHTML = '';
+  if (s.examDate) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const d = new Date(s.examDate);
+    const diff = Math.round((d - today) / 86400000);
+    const cls = diff <= 3 ? 'urgent' : diff <= 7 ? 'soon' : 'ok';
+    const label = diff < 0 ? 'LEWAT' : diff === 0 ? 'HARI INI!' : `${diff}h lagi`;
+    daysLeftHTML = `<span class="days-left-pill ${cls}">${label}</span>`;
+  }
+
+  return `
+  <div class="subject-card ${s.done ? 'done' : ''}" style="--card-accent:${color}">
+    <div class="priority-ring">
+      <svg viewBox="0 0 36 36">
+        <circle class="bg" cx="18" cy="18" r="${r}" />
+        <circle class="fill" cx="18" cy="18" r="${r}"
+          stroke="${color}"
+          stroke-dasharray="${circ}"
+          stroke-dashoffset="${offset}" />
+        <text x="18" y="18">${prog}%</text>
+      </svg>
+    </div>
+
+    <div class="diff-badge diff-${s.difficulty}">${s.difficulty === 'mudah' ? '😊 Mudah' : s.difficulty === 'sedang' ? '😤 Sedang' : '🔥 Susah'}</div>
+    <div class="subject-name">${escHtml(s.name)}</div>
+
+    ${s.examDate ? `<div class="card-exam-date">📅 ${new Date(s.examDate).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})} ${daysLeftHTML}</div>` : ''}
+
+    <div class="subject-notes">${s.notes ? escHtml(s.notes) : '<span style="opacity:0.4">Tidak ada catatan</span>'}</div>
+
+    <div class="progress-wrap">
+      <div class="progress-info"><span>Progress</span><span>${prog}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${prog}%"></div></div>
+    </div>
+
+    <div class="progress-control">
+      <button class="prog-btn" onclick="adjustProgress('${s.id}', -10)">−</button>
+      <span class="prog-value">Ubah progress</span>
+      <button class="prog-btn" onclick="adjustProgress('${s.id}', 10)">+</button>
+    </div>
+
+    <div class="card-actions">
+      <button class="action-btn done-btn" onclick="toggleDone('${s.id}')">${s.done ? '↩ Aktifkan' : '✓ Selesai'}</button>
+      <button class="action-btn" onclick="openModal('${s.id}')">✏️ Edit</button>
+      <button class="action-btn delete" onclick="deleteSubject('${s.id}')">🗑 Hapus</button>
+    </div>
+  </div>`;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updateStats() {
+  document.getElementById('statTotal').textContent = subjects.length;
+  document.getElementById('statHard').textContent = subjects.filter(s=>s.difficulty==='susah').length;
+  document.getElementById('statMedium').textContent = subjects.filter(s=>s.difficulty==='sedang').length;
+  document.getElementById('statEasy').textContent = subjects.filter(s=>s.difficulty==='mudah').length;
+  document.getElementById('statDone').textContent = subjects.filter(s=>s.done).length;
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────
+function adjustProgress(id, delta) {
+  const s = subjects.find(x=>x.id===id);
+  if (!s) return;
+  s.progress = Math.min(100, Math.max(0, (s.progress||0) + delta));
+  save(); render();
+}
+
+function toggleDone(id) {
+  const s = subjects.find(x=>x.id===id);
+  if (!s) return;
+  s.done = !s.done;
+  if (s.done) s.progress = 100;
+  save(); render();
+  showToast(s.done ? '✅ Mapel ditandai selesai!' : '↩ Mapel diaktifkan kembali');
+}
+
+function deleteSubject(id) {
+  if (!confirm('Hapus mapel ini?')) return;
+  subjects = subjects.filter(x=>x.id!==id);
+  save(); render();
+  showToast('🗑 Mapel dihapus');
+}
+
+// ─── MODAL ────────────────────────────────────────────────────
+function openModal(id = null) {
+  editingId = id;
+  const modal = document.getElementById('modalOverlay');
+  document.getElementById('modalTitle').textContent = id ? 'Edit Mapel' : 'Tambah Mapel';
+
+  if (id) {
+    const s = subjects.find(x=>x.id===id);
+    if (s) {
+      document.getElementById('fName').value = s.name;
+      document.getElementById('fDate').value = s.examDate || '';
+      document.getElementById('fNotes').value = s.notes || '';
+      document.getElementById('fProgress').value = s.progress || 0;
+      document.getElementById('fProgressLabel').textContent = (s.progress||0) + '%';
+      document.querySelectorAll('.diff-opt').forEach(el => {
+        el.classList.toggle('selected', el.dataset.val === s.difficulty);
+      });
+    }
+  } else {
+    document.getElementById('fName').value = '';
+    document.getElementById('fDate').value = '';
+    document.getElementById('fNotes').value = '';
+    document.getElementById('fProgress').value = 0;
+    document.getElementById('fProgressLabel').textContent = '0%';
+    document.querySelectorAll('.diff-opt').forEach(el => {
+      el.classList.toggle('selected', el.dataset.val === 'sedang');
+    });
+  }
+
+  modal.classList.add('open');
+  setTimeout(() => document.getElementById('fName').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function selectDiff(el) {
+  document.querySelectorAll('.diff-opt').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function getSelectedDiff() {
+  return document.querySelector('.diff-opt.selected')?.dataset.val || 'sedang';
+}
+
+function saveSubject() {
+  const name = document.getElementById('fName').value.trim();
+  if (!name) { document.getElementById('fName').focus(); showToast('⚠️ Nama mapel wajib diisi!'); return; }
+
+  if (editingId) {
+    const s = subjects.find(x=>x.id===editingId);
+    if (s) {
+      s.name = name;
+      s.difficulty = getSelectedDiff();
+      s.examDate = document.getElementById('fDate').value;
+      s.notes = document.getElementById('fNotes').value.trim();
+      s.progress = parseInt(document.getElementById('fProgress').value);
+    }
+    showToast('✏️ Mapel diperbarui!');
+  } else {
+    subjects.push({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2),
+      name,
+      difficulty: getSelectedDiff(),
+      examDate: document.getElementById('fDate').value,
+      notes: document.getElementById('fNotes').value.trim(),
+      progress: parseInt(document.getElementById('fProgress').value),
+      done: false,
+      createdAt: Date.now()
+    });
+    showToast('➕ Mapel ditambahkan!');
+  }
+
+  save(); closeModal(); render();
+}
+
+// Close modal on overlay click
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// ─── FILTER & SORT ────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    render();
+  });
+});
+
+document.querySelectorAll('.sort-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentSort = btn.dataset.sort;
+    render();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', render);
+
+// ─── IMPORT / EXPORT ─────────────────────────────────────────
+function exportData() {
+  const data = { subjects, exportedAt: new Date().toISOString(), version: 2 };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `examsurvival_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showToast('📤 Data diekspor!');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const imported = data.subjects || data;
+      if (!Array.isArray(imported)) throw new Error();
+      if (confirm(`Import ${imported.length} mapel? Data lama akan digabung.`)) {
+        const existingIds = new Set(subjects.map(s=>s.id));
+        imported.forEach(s => { if (!existingIds.has(s.id)) subjects.push(s); });
+        save(); render();
+        showToast(`📥 ${imported.length} mapel diimport!`);
+      }
+    } catch { showToast('⚠️ File tidak valid!'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ─── TOAST ────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ─── KEYBOARD ─────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+  if ((e.ctrlKey||e.metaKey) && e.key === 'Enter' && document.getElementById('modalOverlay').classList.contains('open')) {
+    saveSubject();
+  }
+});
+
+// ─── INIT ─────────────────────────────────────────────────────
+load();
+
+// Demo data jika kosong
+if (subjects.length === 0) {
+  subjects = [
+    { id: 'demo1', name: 'Kalkulus II', difficulty: 'susah', examDate: '', notes: 'Bab 4-7: Integral lipat, turunan parsial, deret Taylor. Fokus soal-soal latihan!', progress: 20, done: false, createdAt: Date.now() },
+    { id: 'demo2', name: 'Fisika Dasar', difficulty: 'susah', examDate: '', notes: 'Gelombang, optik, termodinamika. Banyak rumus perlu dihafal.', progress: 10, done: false, createdAt: Date.now() },
+    { id: 'demo3', name: 'Pemrograman Web', difficulty: 'mudah', examDate: '', notes: 'HTML, CSS, JavaScript. Udah familiar, tinggal review aja.', progress: 70, done: false, createdAt: Date.now() },
+    { id: 'demo4', name: 'Struktur Data', difficulty: 'sedang', examDate: '', notes: 'BST, Heap, Graph. Perlu latihan implementasi code.', progress: 40, done: false, createdAt: Date.now() },
+    { id: 'demo5', name: 'Bahasa Indonesia', difficulty: 'mudah', examDate: '', notes: 'Baca materi EYD dan teks ilmiah.', progress: 90, done: false, createdAt: Date.now() },
+  ];
+  save();
+}
+
+render();
+updateCountdown(document.getElementById('examDateGlobal').value);
+</script>
+</body>
+</html>
